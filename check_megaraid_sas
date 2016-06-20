@@ -58,6 +58,7 @@ my $hotspares = 0;
 my $hotsparecount = 0;
 my $pdbad = 0;
 my $pdcount = 0;
+my $jbod = 0;
 my $mediaerrors = 0;
 my $mediaallow = 0;
 my $prederrors = 0;
@@ -200,6 +201,8 @@ ADAPTER: for ( my $adp = 0; $adp < $adapters; $adp++ ) {
 				$hotsparecount++;
 			} elsif ( $fwstate eq 'Online' ) {
 				# Do nothing
+      } elsif ( $fwstate eq 'JBOD' ) {
+        $jbod++;
 			} elsif ( $fwstate eq 'Unconfigured' ) {
 				# A drive not in anything, or a non drive device
 				$pdcount--;
@@ -218,6 +221,12 @@ $result .= "Drives:$pdcount ";
 if ( $pdbad ) {
 	$result .= "$pdbad Bad Drives ";
 }
+
+# JBOD disks?
+if ( $jbod ) {
+  $result .= "JBOD Drives:$jbod ";
+}
+
 
 my $errorcount = $mediaerrors + $prederrors + $othererrors;
 # Were there any errors?
